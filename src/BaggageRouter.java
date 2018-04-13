@@ -116,7 +116,7 @@ public class BaggageRouter {
         // System.out.println("    route: " + route);
         Gate gate = end;
         Deque<String> routeStack = new ArrayDeque<>();
-        while (gate != start) {
+        while (gate != null && gate != start) {
             routeStack.push(gate.getName());
             gate = gate.getPrev();
         }
@@ -138,6 +138,9 @@ public class BaggageRouter {
      * @param end   ending gate
      */
     private void calculateRoute(Gate start, Gate end) {
+        if (start.getNeig().isEmpty()) {
+            return;
+        }
         PriorityQueue<Gate> gateQueue = new PriorityQueue<>(Comparator.comparing(Gate::getDis));
         // add neighbors of start Gate to minHeap
         for (int i = 0; i < start.getNeig().size(); i++) {
