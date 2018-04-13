@@ -3,11 +3,9 @@ import java.util.*;
 
 public class BaggageRouter {
     private static HashMap<String, Gate> gateGraph;
-    private static HashMap<String, Gate> flightGateMap;
 
     BaggageRouter() {
         gateGraph = new HashMap<>();
-        flightGateMap = new HashMap<>();
     }
 
     /**
@@ -83,8 +81,7 @@ public class BaggageRouter {
     private void aggregateGates(String line) {
         String[] input = processLine(line);
         String flight = input[0];
-        Gate gate = gateGraph.get(input[1]);
-        flightGateMap.put(flight, gate);
+        gateGraph.put(flight, gateGraph.get(input[1]));
     }
 
     /**
@@ -99,7 +96,7 @@ public class BaggageRouter {
         String bagId = input[0];
         Gate start = gateGraph.get(input[1]);
         String flight = input[2];
-        Gate end = flight.equals("ARRIVAL") ? gateGraph.get("BaggageClaim") : flightGateMap.get(flight);
+        Gate end = (flight.equals("ARRIVAL") ? gateGraph.get("BaggageClaim") : gateGraph.get(flight));
 
         // calculate route and write to output file
         calculateRoute(start, end);
