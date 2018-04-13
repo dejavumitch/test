@@ -102,7 +102,7 @@ public class BaggageRouter {
         Gate end = flight.equals("ARRIVAL") ? gateGraph.get("BaggageClaim") : flightGateMap.get(flight);
 
         // calculate route and write to output file
-        calculateRoute(start);
+        calculateRoute(start, end);
         osw.write(formatAndWriteToFile(bagId, start, end));
     }
 
@@ -138,8 +138,9 @@ public class BaggageRouter {
      * calculate shortest route, applying Dijkstra's Algorithm
      *
      * @param start starting gate
+     * @param end   ending gate
      */
-    private void calculateRoute(Gate start) {
+    private void calculateRoute(Gate start, Gate end) {
         PriorityQueue<Gate> gateQueue = new PriorityQueue<>(Comparator.comparing(Gate::getDis));
         // add neighbors of start Gate to minHeap
         for (int i = 0; i < start.getNeig().size(); i++) {
@@ -160,6 +161,9 @@ public class BaggageRouter {
 
         while (!gateQueue.isEmpty()) {
             Gate cur = gateQueue.poll();
+            if (cur == end) {
+                break;
+            }
             for (int i = 0; i < cur.getNeig().size(); i++) {
                 Gate neig = cur.getNeig().get(i);
                 if (!gateQueue.contains(neig)) {
